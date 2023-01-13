@@ -7,6 +7,7 @@
 
 #define MSR_IA32_FEATURE_CONTROL 0x3A
 
+#pragma pack(push, 4)
 typedef struct _CPUID
 {
     int eax;
@@ -14,6 +15,7 @@ typedef struct _CPUID
     int ecx;
     int edx;
 } CPUID, * PCPUID;
+#pragma pack(pop)
 
 
 typedef union _IA32_FEATURE_CONTROL_MSR
