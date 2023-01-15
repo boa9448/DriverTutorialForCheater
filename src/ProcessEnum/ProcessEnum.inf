@@ -1,0 +1,87 @@
+;
+; ProcessEnum.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=ProcessEnum.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockDown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+ProcessEnum_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+ProcessEnum.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%ProcessEnum.DeviceDesc%=ProcessEnum_Device, Root\ProcessEnum ; TODO: edit hw-id
+
+[ProcessEnum_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+ProcessEnum.sys
+
+;-------------- Service installation
+[ProcessEnum_Device.NT.Services]
+AddService = ProcessEnum,%SPSVCINST_ASSOCSERVICE%, ProcessEnum_Service_Inst
+
+; -------------- ProcessEnum driver install sections
+[ProcessEnum_Service_Inst]
+DisplayName    = %ProcessEnum.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\ProcessEnum.sys
+
+;
+;--- ProcessEnum_Device Coinstaller installation ------
+;
+
+[ProcessEnum_Device.NT.CoInstallers]
+AddReg=ProcessEnum_Device_CoInstaller_AddReg
+CopyFiles=ProcessEnum_Device_CoInstaller_CopyFiles
+
+[ProcessEnum_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[ProcessEnum_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[ProcessEnum_Device.NT.Wdf]
+KmdfService =  ProcessEnum, ProcessEnum_wdfsect
+[ProcessEnum_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "ProcessEnum Installation Disk"
+ProcessEnum.DeviceDesc = "ProcessEnum Device"
+ProcessEnum.SVCDESC = "ProcessEnum Service"
