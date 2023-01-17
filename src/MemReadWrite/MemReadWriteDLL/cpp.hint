@@ -1,0 +1,2 @@
+#define MEMREADWRITEDLL_API __declspec(dllexport)
+#define MEMREADWRITEDLL_API __declspec(dllimport)
