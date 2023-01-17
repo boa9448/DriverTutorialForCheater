@@ -142,26 +142,68 @@ ULONGLONG mem::DriverHelper::read_data(ULONGLONG address, ULONG size)
 
 BYTE mem::DriverHelper::read_byte(ULONGLONG address)
 {
-    return (BYTE)read_data(address, sizeof(BYTE));
+    return (BYTE)this->read_data(address, sizeof(BYTE));
 }
 
 WORD mem::DriverHelper::read_word(ULONGLONG address)
 {
-    return (WORD)read_data(address, sizeof(WORD));
+    return (WORD)this->read_data(address, sizeof(WORD));
 }
 
 DWORD mem::DriverHelper::read_dword(ULONGLONG address)
 {
-    return (DWORD)read_data(address, sizeof(DWORD));
+    return (DWORD)this->read_data(address, sizeof(DWORD));
 }
 
 FLOAT mem::DriverHelper::read_float(ULONGLONG address)
 {
-    DWORD val = (DWORD)read_data(address, sizeof(DWORD));
+    DWORD val = (DWORD)this->read_data(address, sizeof(DWORD));
     return *((FLOAT*)&val);
 }
 
 ULONGLONG mem::DriverHelper::read_ulonglong(ULONGLONG address)
 {
-    return (ULONGLONG)read_data(address, sizeof(ULONGLONG));
+    return this->read_data(address, sizeof(ULONGLONG));
 }
+
+void mem::DriverHelper::write_data(ULONGLONG address, ULONGLONG value, ULONG size)
+{
+    WRITE_REQUEST info = { 0, };
+    info.ProcessID = this->m_pid;
+    info.Address = address;
+    info.Value = value;
+    info.Size = size;
+
+    bool result = DeviceIoControl(this->m_driver, IO_CTL_WRITE_REQUEST, &info, sizeof(info), NULL, 0, NULL, NULL);
+    if (!result)
+        throw DriverIOException("데이터 쓰기를 실패했습니다");
+}
+
+
+void mem::DriverHelper::write_byte(ULONGLONG address, BYTE value)
+{
+    this->write_data(address, value, sizeof(value));
+}
+
+
+void mem::DriverHelper::write_word(ULONGLONG address, WORD value)
+{
+    this->write_data(address, value, sizeof(value));
+}
+
+void mem::DriverHelper::write_dword(ULONGLONG address, DWORD value)
+{
+    this->write_data(address, value, sizeof(value));
+}
+
+void mem::DriverHelper::write_float(ULONGLONG address, FLOAT value)
+{
+    DWORD temp = *((DWORD*)&value);
+    this->write_data(address, temp, sizeof(temp));
+}
+
+void mem::DriverHelper::write_ulonglong(ULONGLONG address, ULONGLONG value)
+{
+    this->write_data(address, value, sizeof(value));
+}
+

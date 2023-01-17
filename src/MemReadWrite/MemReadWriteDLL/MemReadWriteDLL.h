@@ -85,6 +85,13 @@ namespace mem
         DWORD read_dword(ULONGLONG address);
         FLOAT read_float(ULONGLONG address);
         ULONGLONG read_ulonglong(ULONGLONG address);
+
+        void write_data(ULONGLONG address, ULONGLONG value, ULONG size);
+        void write_byte(ULONGLONG address, BYTE value);
+        void write_word(ULONGLONG address, WORD value);
+        void write_dword(ULONGLONG address, DWORD value);
+        void write_float(ULONGLONG address, FLOAT value);
+        void write_ulonglong(ULONGLONG address, ULONGLONG value);
     };
 }
 

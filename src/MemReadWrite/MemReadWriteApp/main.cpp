@@ -5,6 +5,7 @@
 #endif
 
 #include <iostream>
+#include <vector>
 #include "..\MemReadWriteDLL\MemReadWriteDLL.h"
 
 int main()
@@ -17,16 +18,25 @@ int main()
 
         ULONG cur_pid = GetCurrentProcessId();
         HMODULE mod_handle = GetModuleHandle(NULL);
-        ULONGLONG sig = 'ZM';
-
+        std::vector<float> num_list = { 0.1f, 0.2f, 0.3f, 0.4f };
         mem::DriverHelper driver(cur_pid);
-        auto val = driver.read_data((ULONGLONG)mod_handle, 2);
-        std::cout << "val is " << val << std::endl;
 
-        if (sig == val)
-            std::cout << "sig match" << std::endl;
-        else
-            std::cout << "sig miss match" << std::endl;
+        ULONGLONG address = (ULONGLONG)num_list.data();
+
+        auto val = driver.read_float(address);
+        std::cout << "val is " << val << std::endl;
+        for (const auto num : num_list)
+            std::cout << num << " ";
+        std::cout << std::endl;
+
+        address += 4;
+        driver.write_float(address, 0.9f);
+        val = driver.read_float(address);
+        std::cout << "new val is " << val << std::endl;
+
+        for (const auto num : num_list)
+            std::cout << num << " ";
+        std::cout << std::endl;
 
         std::cout << "press enter";
         std::cin.get();
