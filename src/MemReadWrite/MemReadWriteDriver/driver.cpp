@@ -30,7 +30,8 @@ UNICODE_STRING DeviceName;
 
 void DriverUnload(PDRIVER_OBJECT DriverObject)
 {
-    UNREFERENCED_PARAMETER(DriverObject);
+    IoDeleteSymbolicLink(&Win32Device);
+    IoDeleteDevice(DriverObject->DeviceObject);
     Log("[+] DriverUnload call");
 }
 
@@ -101,7 +102,7 @@ NTSTATUS ControlProc(ULONG ControlCode, PVOID Buffer, ULONG_PTR* Information)
         Log("[ ] Read Param : %lu, 0x%llx", Info->ProcessID, Info->Address);
         Log("[ ] Read Value : %llu", Info->Response);
 
-        *Information = Status == STATUS_SUCCESS ? Info->Size : 0;
+        *Information = Status == STATUS_SUCCESS ? sizeof(READ_REQUEST) : 0;
     }
     else if (ControlCode == IO_CTL_WRITE_REQUEST)
     {
@@ -110,7 +111,7 @@ NTSTATUS ControlProc(ULONG ControlCode, PVOID Buffer, ULONG_PTR* Information)
 
         Log("[ ] Write Param : %lu, 0x%llx, %llu", Info->ProcessID, Info->Address, Info->Value);
 
-        *Information = Status == STATUS_SUCCESS ? Info->Size : 0;
+        *Information = Status == STATUS_SUCCESS ? sizeof(WRITE_REQUEST) : 0;
     }
     else
     {
