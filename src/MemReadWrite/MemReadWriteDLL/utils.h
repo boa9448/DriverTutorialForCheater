@@ -8,20 +8,20 @@
 bool resource_to_file(HMODULE module_handle, int resoruce_id, const std::wstring& resoruce_type, const std::wstring& file_path)
 {
 	HRSRC hrsrc = FindResourceW(module_handle, MAKEINTRESOURCE(resoruce_id), resoruce_type.c_str());
-	if (hrsrc == NULL) return FALSE;
+	if (hrsrc == NULL)
+        return FALSE;
 
 	HANDLE hres = LoadResource(module_handle, hrsrc);
-	if (hres == NULL) return FALSE;
+	if (hres == NULL)
+        return FALSE;
 
 	BYTE* resoruce = (BYTE*)LockResource(hres);
-	if (resoruce == NULL) return FALSE;
+	if (resoruce == NULL)
+        return FALSE;
 
 	HANDLE hfile = CreateFileW(file_path.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hfile == INVALID_HANDLE_VALUE)
-	{
-		CloseHandle(hfile);
 		return FALSE;
-	}
 
 	DWORD file_size = SizeofResource(module_handle, hrsrc);
 	DWORD write_size = 0;
