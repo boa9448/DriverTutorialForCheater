@@ -8,43 +8,43 @@
 //https://github.com/vRare/AutoSpitta-x64/blob/5f5a3c5306f0606190c10a9b3743278c6b14932c/hacks.c#L9
 NTSTATUS Sleep(ULONGLONG milliseconds)
 {
-	LARGE_INTEGER delay;
-	ULONG* split;
+    LARGE_INTEGER delay;
+    ULONG* split;
 
-	milliseconds *= 1000000;
+    milliseconds *= 1000000;
 
-	milliseconds /= 100;
+    milliseconds /= 100;
 
-	milliseconds = ~milliseconds + 1;
+    milliseconds = ~milliseconds + 1;
 
-	split = (ULONG*)&milliseconds;
+    split = (ULONG*)&milliseconds;
 
-	delay.LowPart = *split;
+    delay.LowPart = *split;
 
-	split++;
+    split++;
 
-	delay.HighPart = *split;
+    delay.HighPart = *split;
 
 
-	KeDelayExecutionThread(KernelMode, 0, &delay);
+    KeDelayExecutionThread(KernelMode, 0, &delay);
 
-	return STATUS_SUCCESS;
+    return STATUS_SUCCESS;
 }
 
 
 void ThreadProc(PVOID Param)
 {
-	UNREFERENCED_PARAMETER(Param);
+    UNREFERENCED_PARAMETER(Param);
 
     Log("Thread start!");
-	for (int idx = 0; idx < 10; idx++)
-	{
-		Log("Thread run... %d", idx);
-		Sleep(1000);
-	}
+    for (int idx = 0; idx < 10; idx++)
+    {
+        Log("Thread run... %d", idx);
+        Sleep(1000);
+    }
 
-	Log("Thread end!");
-	PsTerminateSystemThread(0);
+    Log("Thread end!");
+    PsTerminateSystemThread(0);
 }
 
 
@@ -62,17 +62,23 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Reg
     DriverObject->DriverUnload = DriverUnload;
 
     HANDLE ThreadHandle = NULL;
-	OBJECT_ATTRIBUTES Attr = { 0, };
+    OBJECT_ATTRIBUTES Attr = { 0, };
 
-	InitializeObjectAttributes(&Attr, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
-	NTSTATUS Status = PsCreateSystemThread(&ThreadHandle, THREAD_ALL_ACCESS, &Attr, NULL, NULL, ThreadProc, NULL);
-	if (!NT_SUCCESS(Status))
-	{
-		Log("PsCreateSystemThread fail... 0x%x", Status);
-		return STATUS_UNSUCCESSFUL;
-	}
+    InitializeObjectAttributes(&Attr, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
+    NTSTATUS Status = PsCreateSystemThread(&ThreadHandle
+                                            , THREAD_ALL_ACCESS
+                                            , &Attr
+                                            , NULL
+                                            , NULL
+                                            , ThreadProc
+                                            , NULL);
+    if (!NT_SUCCESS(Status))
+    {
+        Log("PsCreateSystemThread fail... 0x%x", Status);
+        return STATUS_UNSUCCESSFUL;
+    }
 
-	ZwClose(ThreadHandle);
+    ZwClose(ThreadHandle);
     Log("DriverEntry end");
     return STATUS_SUCCESS;
 }
