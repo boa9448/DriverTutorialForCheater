@@ -72,6 +72,7 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Reg
 		return STATUS_UNSUCCESSFUL;
 	}
 
+	ZwClose(ThreadHandle);
     Log("DriverEntry end");
     return STATUS_SUCCESS;
 }
