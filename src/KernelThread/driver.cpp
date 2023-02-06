@@ -62,7 +62,10 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Reg
     DriverObject->DriverUnload = DriverUnload;
 
     HANDLE ThreadHandle = NULL;
-	NTSTATUS Status = PsCreateSystemThread(&ThreadHandle, THREAD_ALL_ACCESS, NULL, NULL, NULL, ThreadProc, NULL);
+	OBJECT_ATTRIBUTES Attr = { 0, };
+
+	InitializeObjectAttributes(&Attr, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
+	NTSTATUS Status = PsCreateSystemThread(&ThreadHandle, THREAD_ALL_ACCESS, &Attr, NULL, NULL, ThreadProc, NULL);
 	if (!NT_SUCCESS(Status))
 	{
 		Log("PsCreateSystemThread fail... 0x%x", Status);
