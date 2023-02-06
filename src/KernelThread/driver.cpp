@@ -5,26 +5,14 @@
 #define Log(format, ...) DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "[KernelThread]" format "\n", ##__VA_ARGS__)
 
 
-//https://github.com/vRare/AutoSpitta-x64/blob/5f5a3c5306f0606190c10a9b3743278c6b14932c/hacks.c#L9
 NTSTATUS Sleep(ULONGLONG milliseconds)
 {
     LARGE_INTEGER delay;
-    ULONG* split;
 
     milliseconds *= 1000000;
-
     milliseconds /= 100;
-
     milliseconds = ~milliseconds + 1;
-
-    split = (ULONG*)&milliseconds;
-
-    delay.LowPart = *split;
-
-    split++;
-
-    delay.HighPart = *split;
-
+    delay.QuadPart = milliseconds;
 
     KeDelayExecutionThread(KernelMode, 0, &delay);
 
