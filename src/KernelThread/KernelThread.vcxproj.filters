@@ -22,5 +22,10 @@
     <Inf Include="KernelThread.inf">
       <Filter>Driver Files</Filter>
     </Inf>
-  </ItemGroup>  
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="driver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
