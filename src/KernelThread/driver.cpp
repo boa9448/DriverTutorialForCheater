@@ -24,14 +24,14 @@ void ThreadProc(PVOID Param)
 {
     UNREFERENCED_PARAMETER(Param);
 
-    Log("Thread start!");
+    Log("[+] Thread start!");
     for (int idx = 0; idx < 10; idx++)
     {
-        Log("Thread run... %d", idx);
+        Log("[+] Thread run... %d", idx);
         Sleep(1000);
     }
 
-    Log("Thread end!");
+    Log("[+] Thread end!");
     PsTerminateSystemThread(0);
 }
 
@@ -45,7 +45,7 @@ void DriverUnload(PDRIVER_OBJECT DriverObject)
 extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath)
 {
     UNREFERENCED_PARAMETER(RegistryPath);
-    Log("DriverEntry call");
+    Log("[+] DriverEntry call");
 
     DriverObject->DriverUnload = DriverUnload;
 
@@ -62,11 +62,11 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Reg
                                             , NULL);
     if (!NT_SUCCESS(Status))
     {
-        Log("PsCreateSystemThread fail... 0x%x", Status);
+        Log("[-] PsCreateSystemThread fail... 0x%x", Status);
         return STATUS_UNSUCCESSFUL;
     }
 
     ZwClose(ThreadHandle);
-    Log("DriverEntry end");
+    Log("[+] DriverEntry end");
     return STATUS_SUCCESS;
 }
