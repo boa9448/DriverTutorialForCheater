@@ -6,7 +6,7 @@
 
 #include "structs.h"
 
-//4K 단위로 정렬되어야함
+
 #define ALIGNMENT_PAGE_SIZE 4096
 #define VMXON_SIZE          4096
 #define VMCS_SIZE           4096
