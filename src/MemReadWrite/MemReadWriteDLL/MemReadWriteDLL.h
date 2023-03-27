@@ -98,6 +98,13 @@ namespace mem
 
 extern "C"
 {
-    //MEMREADWRITEDLL_API void install_driver();
-    //MEMREADWRITEDLL_API void uninstall_driver();
+    extern "C" MEMREADWRITEDLL_API int InstallDriver();
+    extern "C" MEMREADWRITEDLL_API int UninstallDriver();
+
+    extern "C" MEMREADWRITEDLL_API bool Open(ULONG pid);
+    extern "C" MEMREADWRITEDLL_API BYTE ReadByte(ULONGLONG address);
+    extern "C" MEMREADWRITEDLL_API WORD ReadWord(ULONGLONG address);
+    extern "C" MEMREADWRITEDLL_API DWORD ReadDword(ULONGLONG address);
+    extern "C" MEMREADWRITEDLL_API FLOAT ReadFloat(ULONGLONG address);
+    extern "C" MEMREADWRITEDLL_API ULONGLONG ReadUlonglong(ULONGLONG address);
 }

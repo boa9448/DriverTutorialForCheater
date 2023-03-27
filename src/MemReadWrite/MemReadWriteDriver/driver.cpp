@@ -188,7 +188,7 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Reg
     Log("[+] IoCreateDevice success. Device : %.*ws", (unsigned int)(DeviceName.Length / sizeof(WCHAR)), DeviceName.Buffer);
 
 
-    DeviceObject->Flags |= DO_DIRECT_IO;
+    DeviceObject->Flags |= DO_BUFFERED_IO;
     DeviceObject->Flags &= (~DO_DEVICE_INITIALIZING);
     Status = IoCreateSymbolicLink(&Win32Device, &DeviceName);
     if (!NT_SUCCESS(Status))

@@ -1,6 +1,7 @@
 ﻿// MemReadWriteDLL.cpp : DLL을 위해 내보낸 함수를 정의합니다.
 //
 #include <iostream>
+#include <memory>
 #include "pch.h"
 #include "framework.h"
 #include "MemReadWriteDLL.h"
@@ -207,3 +208,87 @@ void mem::DriverHelper::write_ulonglong(ULONGLONG address, ULONGLONG value)
     this->write_data(address, value, sizeof(value));
 }
 
+int InstallDriver()
+{
+    try
+    {
+        mem::install_driver();
+    }
+    catch (const mem::BaseException& e)
+    {
+        return (int)e.m_error_code;
+    }
+
+    return 0;
+}
+
+int UninstallDriver()
+{
+    try
+    {
+        mem::uninstall_driver();
+    }
+    catch (const mem::BaseException& e)
+    {
+        return (int)e.m_error_code;
+    }
+
+    return 0;
+}
+
+
+
+thread_local std::unique_ptr<mem::DriverHelper> g_helper = nullptr;
+bool Open(ULONG pid)
+{
+    try
+    {
+        g_helper = std::unique_ptr<mem::DriverHelper>(new mem::DriverHelper(pid));
+    }
+    catch (const mem::BaseException& e)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+BYTE ReadByte(ULONGLONG address)
+{
+    if (!g_helper)
+        return 0;
+
+    return g_helper->read_byte(address);
+}
+
+WORD ReadWord(ULONGLONG address)
+{
+    if (!g_helper)
+        return 0;
+
+    return g_helper->read_word(address);
+}
+
+DWORD ReadDword(ULONGLONG address)
+{
+    if (!g_helper)
+        return 0;
+
+    return g_helper->read_dword(address);
+}
+
+FLOAT ReadFloat(ULONGLONG address)
+{
+    if (!g_helper)
+        return 0;
+
+    return g_helper->read_float(address);
+}
+
+ULONGLONG ReadUlonglong(ULONGLONG address)
+{
+    if (!g_helper)
+        return 0;
+
+    return g_helper->read_ulonglong(address);
+}
