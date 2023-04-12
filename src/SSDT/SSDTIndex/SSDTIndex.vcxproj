@@ -107,12 +107,14 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\libs\pe.cpp" />
+    <ClCompile Include="..\libs\ssdt_index.cpp" />
     <ClCompile Include="driver.cpp" />
-    <ClCompile Include="ssdt_index.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="global.hpp" />
-    <ClInclude Include="ssdt_index.hpp" />
+    <ClInclude Include="..\libs\global.hpp" />
+    <ClInclude Include="..\libs\pe.hpp" />
+    <ClInclude Include="..\libs\ssdt_index.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

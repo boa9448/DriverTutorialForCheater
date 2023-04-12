@@ -27,15 +27,21 @@
     <ClCompile Include="driver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ssdt_index.cpp">
+    <ClCompile Include="..\libs\ssdt_index.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\pe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ssdt_index.hpp">
+    <ClInclude Include="..\libs\ssdt_index.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="global.hpp">
+    <ClInclude Include="..\libs\global.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\pe.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

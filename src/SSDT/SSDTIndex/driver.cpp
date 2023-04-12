@@ -1,5 +1,5 @@
-#include "global.hpp"
-#include "ssdt_index.hpp"
+#include "../libs/global.hpp"
+#include "../libs/ssdt_index.hpp"
 
 
 void DriverUnload(PDRIVER_OBJECT driver_object)
