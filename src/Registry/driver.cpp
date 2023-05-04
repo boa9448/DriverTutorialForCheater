@@ -1,3 +1,4 @@
+#include <ntifs.h>
 #include <wdm.h>
 
 #define log(format, ...) DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "[Registry]" "[" __FUNCTION__ "]" format "\n", __VA_ARGS__)
@@ -77,14 +78,12 @@ void enum_registry()
         if (status == STATUS_NO_MORE_ENTRIES)
         {
             log("ZwEnumerateValueKey finished");
-            ZwClose(key_handle);
             break;
         }
 
         if(status != STATUS_BUFFER_TOO_SMALL)
         {
             log("ZwEnumerateValueKey failed with status: %X", status);
-            ZwClose(key_handle);
             break;
         }
 
@@ -92,7 +91,6 @@ void enum_registry()
         if (info == nullptr)
         {
             log("ExAllocatePool2 failed");
-            ZwClose(key_handle);
             break;
         }
 
@@ -101,7 +99,6 @@ void enum_registry()
         {
             log("ZwEnumerateValueKey failed with status: %X", status);
             ExFreePool(info);
-            ZwClose(key_handle);
             break;
         }
 
