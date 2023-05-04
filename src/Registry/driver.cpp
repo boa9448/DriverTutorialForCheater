@@ -53,6 +53,7 @@ void read_registry()
 
     log("current window product name: %wZ", &value);
     ZwClose(key_handle);
+    ExFreePool(info);
 }
 
 
