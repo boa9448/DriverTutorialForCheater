@@ -19,18 +19,20 @@ void init_const_string()
 void init_dynamic_string()
 {
     UNICODE_STRING const_string = RTL_CONSTANT_STRING(L"Hello, World!");
-    USHORT size = const_string.MaximumLength;
+    USHORT size = const_string.Length;
+    USHORT max_size = const_string.MaximumLength;
 
-    PVOID buffer = ExAllocatePool2(POOL_FLAG_NON_PAGED, size, 'irts');
+    PVOID buffer = ExAllocatePool2(POOL_FLAG_NON_PAGED, max_size, 'irts');
     if (buffer == nullptr)
     {
         log("ExAllocatePool2 failed");
         return;
     }
 
-    RtlZeroMemory(buffer, size);
+    RtlZeroMemory(buffer, max_size);
     UNICODE_STRING dynamic_string1 = { 0, };
-    dynamic_string1.MaximumLength = size;
+    dynamic_string1.Length = size;
+    dynamic_string1.MaximumLength = max_size;
     dynamic_string1.Buffer = (PWCH)buffer;
 
     RtlCopyUnicodeString(&dynamic_string1, &const_string);
