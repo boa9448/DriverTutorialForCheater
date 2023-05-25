@@ -1,0 +1,77 @@
+;
+; File.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=File.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+File_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+File.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%File.DeviceDesc%=File_Device, Root\File ; TODO: edit hw-id
+
+[File_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+File.sys
+
+;-------------- Service installation
+[File_Device.NT.Services]
+AddService = File,%SPSVCINST_ASSOCSERVICE%, File_Service_Inst
+
+; -------------- File driver install sections
+[File_Service_Inst]
+DisplayName    = %File.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\File.sys
+
+;
+;--- File_Device Coinstaller installation ------
+;
+
+[File_Device.NT.CoInstallers]
+AddReg=File_Device_CoInstaller_AddReg
+CopyFiles=File_Device_CoInstaller_CopyFiles
+
+[File_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[File_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[File_Device.NT.Wdf]
+KmdfService =  File, File_wdfsect
+[File_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "File Installation Disk"
+File.DeviceDesc = "File Device"
+File.SVCDESC = "File Service"
