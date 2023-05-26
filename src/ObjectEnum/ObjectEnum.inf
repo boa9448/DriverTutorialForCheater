@@ -1,0 +1,77 @@
+;
+; ObjectEnum.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=ObjectEnum.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+ObjectEnum_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+ObjectEnum.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%ObjectEnum.DeviceDesc%=ObjectEnum_Device, Root\ObjectEnum ; TODO: edit hw-id
+
+[ObjectEnum_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+ObjectEnum.sys
+
+;-------------- Service installation
+[ObjectEnum_Device.NT.Services]
+AddService = ObjectEnum,%SPSVCINST_ASSOCSERVICE%, ObjectEnum_Service_Inst
+
+; -------------- ObjectEnum driver install sections
+[ObjectEnum_Service_Inst]
+DisplayName    = %ObjectEnum.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\ObjectEnum.sys
+
+;
+;--- ObjectEnum_Device Coinstaller installation ------
+;
+
+[ObjectEnum_Device.NT.CoInstallers]
+AddReg=ObjectEnum_Device_CoInstaller_AddReg
+CopyFiles=ObjectEnum_Device_CoInstaller_CopyFiles
+
+[ObjectEnum_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[ObjectEnum_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[ObjectEnum_Device.NT.Wdf]
+KmdfService =  ObjectEnum, ObjectEnum_wdfsect
+[ObjectEnum_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "ObjectEnum Installation Disk"
+ObjectEnum.DeviceDesc = "ObjectEnum Device"
+ObjectEnum.SVCDESC = "ObjectEnum Service"
