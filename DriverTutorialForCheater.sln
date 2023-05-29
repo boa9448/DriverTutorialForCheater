@@ -49,7 +49,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "File", "src\File\File.vcxpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectEnum", "src\ObjectEnum\ObjectEnum.vcxproj", "{ED4688D6-6690-4330-A8F1-8242BA191A9E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KernelModuleEnum", "KernelModuleEnum\KernelModuleEnum.vcxproj", "{585CD401-1689-4D13-8DBF-37C1B7047B92}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KernelModuleEnum", "src\KernelModuleEnum\KernelModuleEnum.vcxproj", "{585CD401-1689-4D13-8DBF-37C1B7047B92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
